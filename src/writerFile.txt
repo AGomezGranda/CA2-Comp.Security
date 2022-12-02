@@ -1,0 +1,3 @@
+El texto a cifrar es gato 
+El texto cifrado es eyrm 
+La clave es desplazar hacia la izquierda 2posiciones
