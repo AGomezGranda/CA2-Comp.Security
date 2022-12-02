@@ -1,0 +1,2 @@
+The text to decrypt is: writerFile
+The decpyher text is: F3Rk0wva+2OEzXcsUHM/Gg==

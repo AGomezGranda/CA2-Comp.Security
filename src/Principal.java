@@ -1,13 +1,13 @@
-public class Principal{
+// public class Principal{
 
-public static void main(String[] args) {
-    ApartadoA apartadoA = new ApartadoA();
-    apartadoA.IngresarTexto();
-    apartadoA.writeFile();
+// public static void main(String[] args) {
+//     ApartadoA apartadoA = new ApartadoA();
+//     apartadoA.IngresarTexto();
+//     apartadoA.writeFile();
     
 
 
 
-    }
+//     }
 
-}
+// }

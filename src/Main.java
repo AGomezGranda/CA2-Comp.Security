@@ -29,13 +29,16 @@ public class Main {
 
                 switch (userOptions) {
                     case 0:
-                    //     ApartadoA apartadoAs = new ApartadoA();
-                    //     apartadoAs.Leer();
+                        ApartadoA apartadoA = new ApartadoA();
+                        apartadoA.EncryptMethod();
                         break;
 
                     case 1:
-                        // ApartadoB apartadoBs = new ApartadoB();
-                        // apartadoBs.Leer();
+
+                        ApartadoB apartadoB = new ApartadoB();
+                        apartadoB.DecryptMethod();
+
+                        
                         break;
 
                     case 2:

@@ -3,54 +3,82 @@ import java.io.PrintWriter;
 import java.util.Objects;
 import java.util.Scanner;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Base64;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 public class ApartadoA {
-    public static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
-    public String textoACifrar;
-    public int shiftkey = (int)(Math.random()*10+1);
-    String message = "";
 
-    public void IngresarTexto(){
-       Scanner input = new Scanner (System.in);
-       System.out.println("Escriba el texto a cifrar: ");
-       textoACifrar = input.nextLine(); 
-       System.out.println("El texto a cifrar es " + textoACifrar);
+  private static SecretKeySpec secretKey;
+  private static byte[] key;
+
+  public String txtEncrypt;
+  String secret = "ssshhhhhhhhhhh";
+
+  public static byte[] decryptedString;
+
+  public void EncryptMethod() {
+   
+    //Obtain the text we want to decrypt
+    Scanner input = new Scanner(System.in);
+    System.out.println("Escriba el texto a cifrar: ");
+    txtEncrypt = input.nextLine();
+    System.out.println("El texto a cifrar es " + txtEncrypt);
+        
+    //PrintWriter for showing the decrypt text
+    PrintWriter printWriter = null;
+
+    String encryptedString = ApartadoA.encrypt(txtEncrypt, secret);
+
+    {
+      try {
+        printWriter = new PrintWriter("writerFile2.txt");
+
+      } catch (FileNotFoundException e) {
+        System.out.println("Unable to locate the fileName: " + e.getMessage());
+      }
+      Objects.requireNonNull(printWriter).println("The text to decrypt is: " + txtEncrypt);
+      Objects.requireNonNull(printWriter).println("The decpyher text is: " + encryptedString);
+      printWriter.close();
+
     }
 
-    public String encrypt(String textoACifrar, int shiftKey) {
-        textoACifrar = textoACifrar.toLowerCase();
-        char replaceVal;
-        for (int ii = 0; ii < textoACifrar.length(); ii++) {
-            int charPosition = ALPHABET.indexOf(textoACifrar.charAt(ii));
-           if (charPosition == -1) {
-                replaceVal = 32;
-           } else {
-                int keyVal = (charPosition - shiftKey) % 26;
-                if (keyVal < 0) {
-                    keyVal = ALPHABET.length() + keyVal;
-                }
-                replaceVal = ALPHABET.charAt(keyVal);
-           }
-            message += replaceVal;
-        }
-        return message;
-    }
+  }
 
-    public void writeFile(){
-            PrintWriter printWriter = null;
-            {
-                try {
-                    printWriter = new PrintWriter("writerFile.txt");
-                } catch (FileNotFoundException e) {
-                    System.out.println("Unable to locate the fileName: " + e.getMessage());
-                }
-                Objects.requireNonNull(printWriter).println("El texto a cifrar es " + textoACifrar);
-                Objects.requireNonNull(printWriter).println("El texto cifrado es " + message);
-                Objects.requireNonNull(printWriter).println("La clave es desplazar hacia la izquierda "  + shiftkey + "posiciones");
-                printWriter.close();
-            }
+  //setKey method
+  public static void setKey(final String myKey) {
+    MessageDigest sha = null;
+    try {
+      key = myKey.getBytes("UTF-8");
+      sha = MessageDigest.getInstance("SHA-1");
+      key = sha.digest(key);
+      key = Arrays.copyOf(key, 16);
+      secretKey = new SecretKeySpec(key, "AES");
+    } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+      e.printStackTrace();
     }
- }
+  }
+
+  //decrypt method
+  public static String encrypt(final String txtEncrypt, final String secret) {
+    try {
+      setKey(secret);
+      Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+      cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+      return Base64.getEncoder()
+        .encodeToString(cipher.doFinal(txtEncrypt.getBytes("UTF-8")));
+    } catch (Exception e) {
+      System.out.println("Error while encrypting: " + e.toString());
+    }
+    return null;
+  }
+
+}
 
 
 
