@@ -1,3 +1,5 @@
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Objects;
@@ -18,32 +20,53 @@ public class ApartadoB {
   private static byte[] key;
 
   public String txtDecrypt;
-  String secret = "ssshhhhhhhhhhh!!!!";
+  String secret = "";
 
   public static byte[] decryptedString;
+  
+  BufferedReader reader;
+  String line = null;
 
   public void DecryptMethod() {
    
+    System.out.println(" \n Please write the secret key: ");
+    Scanner askSecretKey = new Scanner(System.in);
+    secret = askSecretKey.nextLine();
+
     //Obtain the text we want to decrypt
-    Scanner input = new Scanner(System.in);
-    System.out.println("Escriba el texto a descifrar: ");
-    txtDecrypt = input.nextLine();
-    System.out.println("El texto a descifrar es " + txtDecrypt);
+    try {
+        File myObj = new File("ciphertext.txt");
+        Scanner myReader = new Scanner(myObj);
+        while (myReader.hasNextLine()) {
+          line = myReader.nextLine();
+          System.out.println("Lines detected in file: " + line);
+        }
+        myReader.close();
+      } catch (FileNotFoundException e) {
+        System.out.println("An error occurred.");
+        e.printStackTrace();
+      }
+
+    // Scanner input = new Scanner(System.in);
+    // System.out.println("Escriba el texto a descifrar: ");
+    // txtDecrypt = input.nextLine();
+    // System.out.println("El texto a descifrar es " + txtDecrypt);
         
     //PrintWriter for showing the decrypt text
     PrintWriter printWriter = null;
 
-    String decryptedString = ApartadoB.decrypt(txtDecrypt, secret);
+    String decryptedString = ApartadoB.decrypt(line, secret);
 
     {
       try {
-        printWriter = new PrintWriter("writerFile3.txt");
+        printWriter = new PrintWriter("plaintext.txt");
+        System.out.println("The decrypted file is plaintext.txt");
 
       } catch (FileNotFoundException e) {
         System.out.println("Unable to locate the fileName: " + e.getMessage());
       }
-      Objects.requireNonNull(printWriter).println("The text to decrypt is: " + txtDecrypt);
-      Objects.requireNonNull(printWriter).println("The decpyher text is: " + decryptedString);
+      //Objects.requireNonNull(printWriter).println("The text to decrypt is: " + txtDecrypt);
+      Objects.requireNonNull(printWriter).println(decryptedString);
       printWriter.close();
 
     }
@@ -65,14 +88,14 @@ public class ApartadoB {
   }
 
   //decrypt method
-  public static String decrypt(final String txtDecrypt, final String secret) {
+  public static String decrypt(final String line, final String secret) {
    
     try {
         setKey(secret);
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
         return new String(cipher.doFinal(Base64.getDecoder()
-          .decode(txtDecrypt)));
+          .decode(line)));
       } catch (Exception e) {
         System.out.println("Error while decrypting: " + e.toString());
       }
@@ -81,23 +104,4 @@ public class ApartadoB {
 
 }
 
-
-  // public String encrypt(String textoACifrar, int shiftKey) {
-  // textoACifrar = textoACifrar.toLowerCase();
-  // char replaceVal;
-  // for (int ii = 0; ii < textoACifrar.length(); ii++) {
-  // int charPosition = ALPHABET.indexOf(textoACifrar.charAt(ii));
-  // if (charPosition == -1) {
-  // replaceVal = 32;
-  // } else {
-  // int keyVal = (charPosition - shiftKey) % 26;
-  // if (keyVal < 0) {
-  // keyVal = ALPHABET.length() + keyVal;
-  // }
-  // replaceVal = ALPHABET.charAt(keyVal);
-  // }
-  // message += replaceVal;
-  // }
-  // return message;
-  // }
 

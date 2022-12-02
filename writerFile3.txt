@@ -1,2 +1,0 @@
-The text to decrypt is: witerFile2
-The decpyher text is: null

@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Objects;
@@ -17,38 +18,59 @@ public class ApartadoA {
   private static SecretKeySpec secretKey;
   private static byte[] key;
 
-  public String txtEncrypt;
-  String secret = "ssshhhhhhhhhhh";
+  public String txtFile; //Text file to encrypt, writeFile.txt
+  String secret = "ssshhhhhhhhhhh!!!!";  //secret key, now hardcoded in future random generate
 
-  public static byte[] decryptedString;
+  public static byte encryptedString;
+
+  //BufferedReader reader;
+  String line = "";
 
   public void EncryptMethod() {
-   
-    //Obtain the text we want to decrypt
-    Scanner input = new Scanner(System.in);
-    System.out.println("Escriba el texto a cifrar: ");
-    txtEncrypt = input.nextLine();
-    System.out.println("El texto a cifrar es " + txtEncrypt);
-        
+
+    System.out.println(" \n Please write the file name: ");
+    Scanner fileName = new Scanner(System.in);
+    String userOptions = fileName.nextLine();
+
+      //Read the text file we want to decrypt    
+      try {
+        File myObj = new File(userOptions);
+        Scanner myReader = new Scanner(myObj);
+        while (myReader.hasNextLine()) {
+          line = myReader.nextLine();
+          System.out.println("Lines in file detected: " + line);
+        }
+        myReader.close();
+      } catch (FileNotFoundException e) {
+        System.out.println("An error occurred.");
+        e.printStackTrace();
+      }
+    
+
+    //Call the encryptString method, with parameters line and secret
+   //call encrypt method
+    String encryptedString = ApartadoA.encrypt(line, secret);
+
+    // System.out.println("aaa - The secret key is " + secret);
     //PrintWriter for showing the decrypt text
     PrintWriter printWriter = null;
-
-    String encryptedString = ApartadoA.encrypt(txtEncrypt, secret);
-
     {
       try {
-        printWriter = new PrintWriter("writerFile2.txt");
+        printWriter = new PrintWriter("ciphertext.txt");
+        System.out.println("The encrypt file is ciphertext.txt");
+        System.out.println("The secret key is " + secret);
 
       } catch (FileNotFoundException e) {
         System.out.println("Unable to locate the fileName: " + e.getMessage());
       }
-      Objects.requireNonNull(printWriter).println("The text to decrypt is: " + txtEncrypt);
-      Objects.requireNonNull(printWriter).println("The decpyher text is: " + encryptedString);
+      //Objects.requireNonNull(printWriter).println("The text to encrypt is: " + txtEncrypt);
+      Objects.requireNonNull(printWriter).println(encryptedString);
       printWriter.close();
 
     }
 
   }
+
 
   //setKey method
   public static void setKey(final String myKey) {
@@ -65,7 +87,7 @@ public class ApartadoA {
   }
 
   //decrypt method
-  public static String encrypt(final String txtEncrypt, final String secret) {
+  public static String encrypt(final String txtEncrypt, final String secret){
     try {
       setKey(secret);
       Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
@@ -75,10 +97,14 @@ public class ApartadoA {
     } catch (Exception e) {
       System.out.println("Error while encrypting: " + e.toString());
     }
+
+    //no muestra por pantalla System.out.println("ccc - The secret key is " + secret);
     return null;
   }
 
 }
+
+
 
 
 
