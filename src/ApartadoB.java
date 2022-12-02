@@ -39,7 +39,7 @@ public class ApartadoB {
         Scanner myReader = new Scanner(myObj);
         while (myReader.hasNextLine()) {
           line = myReader.nextLine();
-          System.out.println("Lines detected in file: " + line);
+          //System.out.println("Lines detected in file: " + line);
         }
         myReader.close();
       } catch (FileNotFoundException e) {
@@ -60,7 +60,7 @@ public class ApartadoB {
     {
       try {
         printWriter = new PrintWriter("plaintext.txt");
-        System.out.println("The decrypted file is plaintext.txt");
+        System.out.println("\n The decrypted file is: plaintext.txt");
 
       } catch (FileNotFoundException e) {
         System.out.println("Unable to locate the fileName: " + e.getMessage());

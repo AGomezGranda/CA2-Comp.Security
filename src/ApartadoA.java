@@ -2,9 +2,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Scanner;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -19,12 +21,10 @@ public class ApartadoA {
   private static byte[] key;
 
   public String txtFile; //Text file to encrypt, writeFile.txt
-  String secret = "ssshhhhhhhhhhh!!!!";  //secret key, now hardcoded in future random generate
+  String secret = "";  //secret key, now hardcoded in future random generate
+  String line = "";
 
   public static byte encryptedString;
-
-  //BufferedReader reader;
-  String line = "";
 
   public void EncryptMethod() {
 
@@ -47,8 +47,10 @@ public class ApartadoA {
       }
     
 
+    //Generate random key
+    this.generateSecretKey();
+
     //Call the encryptString method, with parameters line and secret
-   //call encrypt method
     String encryptedString = ApartadoA.encrypt(line, secret);
 
     // System.out.println("aaa - The secret key is " + secret);
@@ -57,8 +59,8 @@ public class ApartadoA {
     {
       try {
         printWriter = new PrintWriter("ciphertext.txt");
-        System.out.println("The encrypt file is ciphertext.txt");
-        System.out.println("The secret key is " + secret);
+        System.out.println("\n The encrypt file is: ciphertext.txt");
+        System.out.println("\n The secret key is: " + secret);
 
       } catch (FileNotFoundException e) {
         System.out.println("Unable to locate the fileName: " + e.getMessage());
@@ -71,6 +73,23 @@ public class ApartadoA {
 
   }
 
+  public void generateSecretKey() {
+
+    // Algoritm obtained from https://www.baeldung.com/java-random-string
+
+    int leftLimit = 48; // numeral '0'
+    int rightLimit = 122; // letter 'z'
+    int targetStringLength = 32;
+    Random random = new Random();
+
+    secret = random.ints(leftLimit, rightLimit + 1)
+      .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+      .limit(targetStringLength)
+      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+      .toString();
+
+    // System.out.println(secret);
+}
 
   //setKey method
   public static void setKey(final String myKey) {
